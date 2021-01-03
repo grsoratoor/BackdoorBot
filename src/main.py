@@ -15,25 +15,27 @@ logger = logging.getLogger(__name__)
 def start(update, context):
     """Send a message when the command /start is issued."""
     update.message.reply_text('''
-    Hi, I am backdoor to your servers.
-    You can use me to run commands on your servers,
-    but before that I should be running on your servers.''')
+Hi, I am backdoor to your servers.
+You can use me to run commands on your servers,
+but before that I should be running on your servers.
+''')
 
 
 def help_command(update, context):
     """Send a message when the command /help is issued."""
     update.message.reply_text("""
-    You don't necessarily need a computer to run commands on your servers.
-    I am backdoor to your servers. you can send me a command that you want to run on your server,
-    I will execute the commands and return you the result. but before that I should be running on your servers.
-    I am open source and free telegram bot. Please clone my github repo to start using me. for more information please
-    visit https://www.github.com/grsoratoor
+You don't necessarily need a computer to run commands on your servers.
+I am backdoor to your servers. you can send me a command that you want to run on your server,
+I will execute the commands and return you the result. but before that I should be running on your servers.
+I am open source and free telegram bot. Please clone my github repo to start using me. for more information please
+visit https://www.github.com/grsoratoor
     
-    Available Commands
-    /start - starts the bot
-    /new_session - Creates new backdoor session
-    /end_session - Ends existing session
-    /help - shows this message""")
+Available Commands
+/start - starts the bot
+/new_session - Creates new backdoor session
+/end_session - Ends existing session
+/help - shows this message
+""")
 
 
 def new_session(update, context):
@@ -43,7 +45,7 @@ def new_session(update, context):
         child.kill(0)
     child = pexpect.spawn('/bin/bash')
     child.expect('\$')
-    output = child.before.decode() + child.after.decode()
+    output = "Backdoor session created"
     update.message.reply_text(output)
 
 
@@ -57,14 +59,18 @@ def run_cmd(update, context):
     child.sendline(cmd)
     child.expect('\$')
     output = child.before.decode() + child.after.decode()
-    update.message.reply_text(output)
+    output = output.replace(cmd, "")
+    for msg in [output[i:i+4096] for i in range(0, len(output), 4096)]:
+        update.message.reply_text(msg)
 
 
 def end_session(update, context):
     global child
     if child:
         child.kill(0)
-    update.message.reply_text("Backdoor session closed.")
+        update.message.reply_text("Backdoor session closed.")
+    else:
+        update.message.reply_text("Backdoor session already closed.")
 
 
 def main():
